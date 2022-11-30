@@ -94,5 +94,5 @@ oc delete deployments --selector managedby=halos --ignore-not-found
 oc delete services --selector managedby=halos --ignore-not-found
 
 if [[ "${DEVELOPMENT}" == "true" ]]; then
-  oc delete routes --selector environment=development
+  oc delete routes --selector managedby=halos --ignore-not-found
 fi

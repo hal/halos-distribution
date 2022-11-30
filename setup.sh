@@ -109,14 +109,14 @@ oc new-app quay.io/halconsole/wildfly:26.0.0.Final \
 if [[ "${DEVELOPMENT}" == "true" ]]; then
   oc expose service wildfly-thread-racing \
     --port=9990 \
-    --labels managedby=halos,environment=development
+    --labels managedby=halos
   oc expose service wildfly-27 \
     --port=9990 \
-    --labels managedby=halos,environment=development
+    --labels managedby=halos
   oc expose service wildfly-261 \
     --port=9990 \
-    --labels managedby=halos,environment=development
+    --labels managedby=halos
   oc expose service wildfly-26 \
     --port=9990 \
-    --labels managedby=halos,environment=development
+    --labels managedby=halos
 fi
