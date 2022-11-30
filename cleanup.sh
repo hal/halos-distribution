@@ -32,6 +32,7 @@ USAGE:
     $(basename "${BASH_SOURCE[0]}") [FLAGS]
 
 FLAGS:
+    -d, --dev           Apply development settings
     -h, --help          Prints help information
     -v, --version       Prints version information
     --no-color          Uses plain text output
@@ -69,8 +70,10 @@ version() {
 }
 
 parse_params() {
+  DEVELOPMENT=false
   while :; do
     case "${1-}" in
+    -d | --dev) DEVELOPMENT=true ;;
     -h | --help) usage ;;
     -v | --version) version ;;
     --no-color) NO_COLOR=1 ;;
@@ -89,3 +92,7 @@ setup_colors
 
 oc delete deployments --selector managedby=halos --ignore-not-found
 oc delete services --selector managedby=halos --ignore-not-found
+
+if [[ "${DEVELOPMENT}" == "true" ]]; then
+  oc delete routes --selector environment=development
+fi

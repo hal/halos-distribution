@@ -32,6 +32,7 @@ USAGE:
     $(basename "${BASH_SOURCE[0]}") [FLAGS]
 
 FLAGS:
+    -d, --dev           Apply development settings
     -h, --help          Prints help information
     -v, --version       Prints version information
     --no-color          Uses plain text output
@@ -69,8 +70,10 @@ version() {
 }
 
 parse_params() {
+  DEVELOPMENT=false
   while :; do
     case "${1-}" in
+    -d | --dev) DEVELOPMENT=true ;;
     -h | --help) usage ;;
     -v | --version) version ;;
     --no-color) NO_COLOR=1 ;;
@@ -102,3 +105,18 @@ oc new-app quay.io/halconsole/wildfly:26.1.0.Final \
 oc new-app quay.io/halconsole/wildfly:26.0.0.Final \
   --name=wildfly-26 \
   --labels managedby=halos,app.kubernetes.io/name=wildfly
+
+if [[ "${DEVELOPMENT}" == "true" ]]; then
+  oc expose service wildfly-thread-racing \
+    --port=9990 \
+    --labels managedby=halos,environment=development
+  oc expose service wildfly-27 \
+    --port=9990 \
+    --labels managedby=halos,environment=development
+  oc expose service wildfly-261 \
+    --port=9990 \
+    --labels managedby=halos,environment=development
+  oc expose service wildfly-26 \
+    --port=9990 \
+    --labels managedby=halos,environment=development
+fi
