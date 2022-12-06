@@ -106,17 +106,25 @@ oc new-app quay.io/halconsole/wildfly:26.0.0.Final \
   --name=wildfly-26 \
   --labels managedby=halos,app.kubernetes.io/name=wildfly
 
+oc expose service wildfly-thread-racing \
+    --name=wildfly-thread-racing \
+    --port=8080
+  
 if [[ "${DEVELOPMENT}" == "true" ]]; then
   oc expose service wildfly-thread-racing \
+    --name=wildfly-thread-racing-management \
     --port=9990 \
     --labels managedby=halos
   oc expose service wildfly-27 \
+    --name=wildfly-27-management \
     --port=9990 \
     --labels managedby=halos
   oc expose service wildfly-261 \
+    --name=wildfly-261-management \
     --port=9990 \
     --labels managedby=halos
   oc expose service wildfly-26 \
+    --name=wildfly-26-management \
     --port=9990 \
     --labels managedby=halos
 fi
