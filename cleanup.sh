@@ -29,13 +29,19 @@ cd "${script_dir}"
 usage() {
   cat <<EOF
 USAGE:
-    $(basename "${BASH_SOURCE[0]}") [FLAGS]
+    $(basename "${BASH_SOURCE[0]}") [FLAGS] all|halos|services
 
 FLAGS:
     -d, --dev           Apply development settings
     -h, --help          Prints help information
     -v, --version       Prints version information
     --no-color          Uses plain text output
+
+ARGUMENTS:
+    all                 Cleanup everything
+    openshift           Cleanup service account, roles and role binding
+    halos               Undeploy halOS service and routes
+    services            Undeploy WildFly and Quarkus demo services
 EOF
   exit
 }
@@ -73,27 +79,60 @@ parse_params() {
   DEVELOPMENT=false
   while :; do
     case "${1-}" in
-    -d | --dev) DEVELOPMENT=true ;;
-    -h | --help) usage ;;
-    -v | --version) version ;;
-    --no-color) NO_COLOR=1 ;;
-    -?*) die "Unknown option: $1" ;;
-    *) break ;;
+      -d | --dev) DEVELOPMENT=true ;;
+      -h | --help) usage ;;
+      -v | --version) version ;;
+      --no-color) NO_COLOR=1 ;;
+      -?*) die "Unknown option: $1" ;;
+      *) break ;;
     esac
     shift
   done
 
+  args=("$@")
+  [[ ${#args[@]} -eq 0 ]] && die "Missing argument. Pease specify one of all|halos|services"
+  MODULE=${args[0]}
+
   return 0
+}
+
+all() {
+  halos
+  services
+}
+
+halos() {
+  msg
+  msg "Cleanup ${CYAN}halOS${NOFORMAT}"
+  oc delete route halos --ignore-not-found
+  oc delete service halos --ignore-not-found
+  oc delete dc halos --ignore-not-found
+  oc delete is halos --ignore-not-found
+}
+
+services() {
+  msg
+  msg "Cleanup ${CYAN}services${NOFORMAT}"
+  oc delete deployments --selector managedby=halos --ignore-not-found
+  oc delete services --selector managedby=halos --ignore-not-found
+  oc delete route wildfly-thread-racing --ignore-not-found
+
+  if [[ "${DEVELOPMENT}" == "true" ]]; then
+    msg
+    msg "Cleanup ${CYAN}services${NOFORMAT} for ${YELLOW}development${NOFORMAT}"
+    oc delete routes --selector managedby=halos --ignore-not-found
+  fi
 }
 
 parse_params "$@"
 setup_colors
 [ -x oc ] && die "OpenShift command line tools not available. See https://docs.openshift.com/container-platform/latest/cli_reference/openshift_cli/getting-started-cli.html#installing-openshift-cli"
 
-oc delete deployments --selector managedby=halos --ignore-not-found
-oc delete services --selector managedby=halos --ignore-not-found
-oc delete route wildfly-thread-racing --ignore-not-found
+case "${MODULE-}" in
+  all) all ;;
+  halos) halos ;;
+  services) services ;;
+  *) die "Illegal arument: $1. Pease specify one of all|halos|services" ;;
+esac
 
-if [[ "${DEVELOPMENT}" == "true" ]]; then
-  oc delete routes --selector managedby=halos --ignore-not-found
-fi
+

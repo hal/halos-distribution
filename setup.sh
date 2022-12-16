@@ -29,13 +29,20 @@ cd "${script_dir}"
 usage() {
   cat <<EOF
 USAGE:
-    $(basename "${BASH_SOURCE[0]}") [FLAGS]
+    $(basename "${BASH_SOURCE[0]}") [FLAGS] all|openshift|halos|services
 
 FLAGS:
     -d, --dev           Apply development settings
     -h, --help          Prints help information
     -v, --version       Prints version information
     --no-color          Uses plain text output
+
+ARGUMENTS:
+    all                 Setup everything
+    openshift           Setup service account, roles and role binding
+    halos               Deploy halOS service and routes
+    services            Deploy WildFly and Quarkus demo services
+
 EOF
   exit
 }
@@ -73,58 +80,95 @@ parse_params() {
   DEVELOPMENT=false
   while :; do
     case "${1-}" in
-    -d | --dev) DEVELOPMENT=true ;;
-    -h | --help) usage ;;
-    -v | --version) version ;;
-    --no-color) NO_COLOR=1 ;;
-    -?*) die "Unknown option: $1" ;;
-    *) break ;;
+      -d | --dev) DEVELOPMENT=true ;;
+      -h | --help) usage ;;
+      -v | --version) version ;;
+      --no-color) NO_COLOR=1 ;;
+      -?*) die "Unknown option: $1" ;;
+      *) break ;;
     esac
     shift
   done
 
+  args=("$@")
+  [[ ${#args[@]} -eq 0 ]] && die "Missing argument. Pease specify one of all|openshift|halos|services"
+  MODULE=${args[0]}
+
   return 0
+}
+
+all() {
+  openshift
+  halos
+  services
+}
+
+openshift() {
+  msg
+  msg "Setup ${CYAN}OpenShift${NOFORMAT}"
+  oc get serviceaccount halos-serviceaccount || oc create serviceaccount halos-serviceaccount
+  oc policy add-role-to-user view -z halos-serviceaccount
+}
+
+halos() {
+  msg
+  msg "Setup ${CYAN}halOS${NOFORMAT}"
+  oc apply -f halos/imagestream.yml
+  oc apply -f halos/deploymentconfig.yml
+  oc apply -f halos/service.yml
+  oc apply -f halos/route.yml
+}
+
+services() {
+  msg
+  msg "Setup ${CYAN}services${NOFORMAT}"
+  oc new-app quay.io/hpehl/wildfly-halos-demo \
+    --name=wildfly-thread-racing \
+    --labels managedby=halos,app.kubernetes.io/name=wildfly
+  oc new-app quay.io/halconsole/wildfly:27.0.0.Final \
+    --name=wildfly-27 \
+    --labels managedby=halos,app.kubernetes.io/name=wildfly
+  oc new-app quay.io/halconsole/wildfly:26.1.0.Final \
+    --name=wildfly-261 \
+    --labels managedby=halos,app.kubernetes.io/name=wildfly
+  oc new-app quay.io/halconsole/wildfly:26.0.0.Final \
+    --name=wildfly-26 \
+    --labels managedby=halos,app.kubernetes.io/name=wildfly
+
+  oc expose service wildfly-thread-racing \
+      --name=wildfly-thread-racing \
+      --port=8080
+    
+  if [[ "${DEVELOPMENT}" == "true" ]]; then
+    msg
+    msg "Setup ${CYAN}services${NOFORMAT} for ${YELLOW}development${NOFORMAT}"
+    oc expose service wildfly-thread-racing \
+      --name=wildfly-thread-racing-management \
+      --port=9990 \
+      --labels managedby=halos
+    oc expose service wildfly-27 \
+      --name=wildfly-27-management \
+      --port=9990 \
+      --labels managedby=halos
+    oc expose service wildfly-261 \
+      --name=wildfly-261-management \
+      --port=9990 \
+      --labels managedby=halos
+    oc expose service wildfly-26 \
+      --name=wildfly-26-management \
+      --port=9990 \
+      --labels managedby=halos
+  fi
 }
 
 parse_params "$@"
 setup_colors
-[ -x oc ] && die "OpenShift command line tools not available. See https://docs.openshift.com/container-platform/latest/cli_reference/openshift_cli/getting-started-cli.html#installing-openshift-cli"
+[[ -x oc ]] && die "OpenShift command line tools not available. See https://docs.openshift.com/container-platform/latest/cli_reference/openshift_cli/getting-started-cli.html#installing-openshift-cli"
 
-oc get serviceaccount halos-serviceaccount || oc create serviceaccount halos-serviceaccount
-oc policy add-role-to-user view -z halos-serviceaccount
-
-oc new-app quay.io/hpehl/wildfly-halos-demo \
-  --name=wildfly-thread-racing \
-  --labels managedby=halos,app.kubernetes.io/name=wildfly
-oc new-app quay.io/halconsole/wildfly:27.0.0.Final \
-  --name=wildfly-27 \
-  --labels managedby=halos,app.kubernetes.io/name=wildfly
-oc new-app quay.io/halconsole/wildfly:26.1.0.Final \
-  --name=wildfly-261 \
-  --labels managedby=halos,app.kubernetes.io/name=wildfly
-oc new-app quay.io/halconsole/wildfly:26.0.0.Final \
-  --name=wildfly-26 \
-  --labels managedby=halos,app.kubernetes.io/name=wildfly
-
-oc expose service wildfly-thread-racing \
-    --name=wildfly-thread-racing \
-    --port=8080
-  
-if [[ "${DEVELOPMENT}" == "true" ]]; then
-  oc expose service wildfly-thread-racing \
-    --name=wildfly-thread-racing-management \
-    --port=9990 \
-    --labels managedby=halos
-  oc expose service wildfly-27 \
-    --name=wildfly-27-management \
-    --port=9990 \
-    --labels managedby=halos
-  oc expose service wildfly-261 \
-    --name=wildfly-261-management \
-    --port=9990 \
-    --labels managedby=halos
-  oc expose service wildfly-26 \
-    --name=wildfly-26-management \
-    --port=9990 \
-    --labels managedby=halos
-fi
+case "${MODULE-}" in
+  all) all ;;
+  openshift) openshift ;;
+  halos) halos ;;
+  services) services ;;
+  *) die "Unknown arument: $1. Pease specify one of all|openshift|halos|services" ;;
+esac

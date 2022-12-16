@@ -1,0 +1,58 @@
+kind: DeploymentConfig
+apiVersion: apps.openshift.io/v1
+metadata:
+  name: halos
+  namespace: hpehl-dev
+  labels:
+    app.kubernetes.io/name: halos
+spec:
+  strategy:
+    type: Rolling
+    rollingParams:
+      updatePeriodSeconds: 1
+      intervalSeconds: 1
+      timeoutSeconds: 600
+      maxUnavailable: 25%
+      maxSurge: 25%
+    activeDeadlineSeconds: 21600
+  triggers:
+    - type: ImageChange
+      imageChangeParams:
+        automatic: true
+        containerNames:
+          - halos
+        from:
+          kind: ImageStreamTag
+          namespace: hpehl-dev
+          name: 'halos:latest'
+    - type: ConfigChange
+  replicas: 1
+  revisionHistoryLimit: 10
+  test: false
+  selector:
+    app: halos
+    deploymentconfig: halos
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: halos
+        app.kubernetes.io/name: halos
+        deploymentconfig: halos
+    spec:
+      containers:
+        - name: halos
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+            - containerPort: 8443
+              protocol: TCP
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          imagePullPolicy: IfNotPresent
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+      dnsPolicy: ClusterFirst
+      serviceAccountName: halos-serviceaccount
+      serviceAccount: halos-serviceaccount
+      schedulerName: default-scheduler

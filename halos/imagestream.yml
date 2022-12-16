@@ -1,0 +1,15 @@
+kind: ImageStream
+apiVersion: image.openshift.io/v1
+metadata:
+  name: halos
+  namespace: hpehl-dev
+  labels:
+    app.kubernetes.io/name: halos
+spec:
+  lookupPolicy:
+    local: false
+  tags:
+    - name: latest
+      from:
+        kind: DockerImage
+        name: quay.io/halconsole/halos
