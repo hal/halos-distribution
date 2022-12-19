@@ -122,6 +122,9 @@ halos() {
 services() {
   msg
   msg "Setup ${CYAN}services${NOFORMAT}"
+  oc new-app quay.io/hpehl/quarkus-halos-demo \
+    --name=quarkus-demo \
+    --labels managedby=halos,app.kubernetes.io/name=quarkus
   oc new-app quay.io/hpehl/wildfly-halos-demo \
     --name=wildfly-thread-racing \
     --labels managedby=halos,app.kubernetes.io/name=wildfly
@@ -135,6 +138,9 @@ services() {
     --name=wildfly-26 \
     --labels managedby=halos,app.kubernetes.io/name=wildfly
 
+  oc expose service quarkus-demo \
+      --name=quarkus-demo \
+      --port=8080
   oc expose service wildfly-thread-racing \
       --name=wildfly-thread-racing \
       --port=8080

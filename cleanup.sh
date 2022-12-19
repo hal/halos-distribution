@@ -116,6 +116,7 @@ services() {
   oc delete deployments --selector managedby=halos --ignore-not-found
   oc delete services --selector managedby=halos --ignore-not-found
   oc delete route wildfly-thread-racing --ignore-not-found
+  oc delete route quarkus-demo --ignore-not-found
 
   if [[ "${DEVELOPMENT}" == "true" ]]; then
     msg
