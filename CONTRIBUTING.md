@@ -12,13 +12,13 @@ If you don't have one already, head to https://github.com/
 
 ## Fork halOS
 
-Fork https://github.com/hal/halos-proxy into your GitHub account.
+Fork https://github.com/hal/halos-distribution into your GitHub account.
 
 ## Clone your newly forked repository onto your local machine
 
 ```bash
-git clone git@github.com:[your username]/halos-proxy.git
-cd halos-proxy
+git clone git@github.com:[your username]/halos-distribution.git
+cd halos-distribution
 ```
 
 ## Add a remote reference to upstream
@@ -26,7 +26,7 @@ cd halos-proxy
 This makes it easy to pull down changes in the project over time
 
 ```bash
-git remote add upstream git://github.com/hal/halos-proxy.git
+git remote add upstream git://github.com/hal/halos-distribution.git
 ```
 
 # Development Process
