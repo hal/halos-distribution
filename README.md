@@ -11,13 +11,13 @@ halOS consists of two parts:
 1. [Proxy](https://github.com/hal/halos-proxy) (back-end)
 2. [Console](https://github.com/hal/halos-console) (front-end)
 
-## Prerequisites
+## Setup
+
+### Prerequisites
 
 You need to have access to an OpenShift cluster. The easiest way to get started is to use the [OpenShift sandbox](https://developers.redhat.com/developer-sandbox). The sandbox provides you with a private OpenShift environment in a shared, multi-tenant OpenShift cluster that is pre-configured with a set of developer tools.
 
-Finally, you need to install the OpenShift [command line tools](https://docs.openshift.com/container-platform/latest/cli_reference/openshift_cli/getting-started-cli.html) `oc`. 
-
-## Setup
+Finally, you need to install the OpenShift [command line tools](https://docs.openshift.com/container-platform/latest/cli_reference/openshift_cli/getting-started-cli.html) `oc`.
 
 The `./setup.sh` script contains everything to set up the OpenShift, halOS and sample services: 
 
