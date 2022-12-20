@@ -38,7 +38,7 @@ ARGUMENTS:
 
 You can set up everything in one go `./setup.sh all`, or do it incrementally. The latter is useful if you first want to start halOS and then start the demo services. 
 
-For halOS [quay.io/halconsole/halos](https://quay.io/repository/halconsole/halos) is used. The demo services are based on [quay.io/hpehl/wildfly-halos-demo](https://quay.io/repository/hpehl/wildfly-halos-demo), [quay.io/hpehl/quarkus-halos-demo](https://quay.io/repository/hpehl/quarkus-halos-demo) and [quay.io/halconsole/wildfly](https://quay.io/repository/halconsole/wildfly).
+The script deploys halOS from [quay.io/halconsole/halos](https://quay.io/repository/halconsole/halos) and exposes a secure route. Please use `oc get route halos --output jsonpath={.spec.host}` to get the hostname. The demo services are based on [quay.io/hpehl/wildfly-halos-demo](https://quay.io/repository/hpehl/wildfly-halos-demo), [quay.io/hpehl/quarkus-halos-demo](https://quay.io/repository/hpehl/quarkus-halos-demo) and [quay.io/halconsole/wildfly](https://quay.io/repository/halconsole/wildfly).
 
 ## Cleanup
 
