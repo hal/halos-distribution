@@ -36,7 +36,9 @@ ARGUMENTS:
     services            Deploy WildFly and Quarkus demo services
 ```
 
-You can set up everything in one go, or do it incrementally. The latter is useful if you first want to start halOS and the start some demo services. halOS is deployed from [quay.io/halconsole/halos](https://quay.io/repository/halconsole/halos). The demo services are based on [quay.io/hpehl/wildfly-halos-demo](https://quay.io/repository/hpehl/wildfly-halos-demo), [quay.io/hpehl/quarkus-halos-demo](https://quay.io/repository/hpehl/quarkus-halos-demo) and [quay.io/halconsole/wildfly](https://quay.io/repository/halconsole/wildfly).
+You can set up everything in one go `./setup.sh all`, or do it incrementally. The latter is useful if you first want to start halOS and then start the demo services. 
+
+For halOS [quay.io/halconsole/halos](https://quay.io/repository/halconsole/halos) is used. The demo services are based on [quay.io/hpehl/wildfly-halos-demo](https://quay.io/repository/hpehl/wildfly-halos-demo), [quay.io/hpehl/quarkus-halos-demo](https://quay.io/repository/hpehl/quarkus-halos-demo) and [quay.io/halconsole/wildfly](https://quay.io/repository/halconsole/wildfly).
 
 ## Cleanup
 
