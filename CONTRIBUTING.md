@@ -58,7 +58,7 @@ git checkout -b my_cool_feature
 
 ## Make the changes
 
-Make whatever code changes, including new tests to verify your change, are necessary and ensure that the build and tests pass. Make sure your code changes apply to the rules defined in [etc](etc). This should happen automatically, but you can also execute the `./format.sh` and `./validate.sh` scripts manually before submitting your changes.
+Make whatever code changes, including new tests to verify your change, are necessary and ensure that the build and tests pass. 
 
 ```bash
 mvn clean verify
