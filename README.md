@@ -17,7 +17,7 @@ Finally, you need to install the OpenShift [command line tools](https://docs.ope
 
 ## Setup
 
-The `./setup.sh` script contains everything to set up the OpenShift, halOS and sample services: 
+The `./setup.sh` script contains everything to set up OpenShift, halOS and sample services: 
 
 ```shell
 USAGE:
