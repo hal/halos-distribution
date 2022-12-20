@@ -91,7 +91,7 @@ parse_params() {
   done
 
   args=("$@")
-  [[ ${#args[@]} -eq 0 ]] && die "Missing argument. Pease specify one of all|openshift|halos|services"
+  [[ ${#args[@]} -eq 0 ]] && die "Missing argument. Please specify one of all|openshift|halos|services"
   MODULE=${args[0]}
 
   return 0
@@ -144,7 +144,7 @@ services() {
   oc expose service wildfly-thread-racing \
       --name=wildfly-thread-racing \
       --port=8080
-    
+
   if [[ "${DEVELOPMENT}" == "true" ]]; then
     msg
     msg "Setup ${CYAN}services${NOFORMAT} for ${YELLOW}development${NOFORMAT}"
@@ -176,5 +176,5 @@ case "${MODULE-}" in
   openshift) openshift ;;
   halos) halos ;;
   services) services ;;
-  *) die "Unknown arument: $1. Pease specify one of all|openshift|halos|services" ;;
+  *) die "Unknown argument: $1. Please specify one of all|openshift|halos|services" ;;
 esac

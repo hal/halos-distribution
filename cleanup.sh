@@ -90,7 +90,7 @@ parse_params() {
   done
 
   args=("$@")
-  [[ ${#args[@]} -eq 0 ]] && die "Missing argument. Pease specify one of all|halos|services"
+  [[ ${#args[@]} -eq 0 ]] && die "Missing argument. Please specify one of all|halos|services"
   MODULE=${args[0]}
 
   return 0
@@ -133,7 +133,7 @@ case "${MODULE-}" in
   all) all ;;
   halos) halos ;;
   services) services ;;
-  *) die "Illegal arument: $1. Pease specify one of all|halos|services" ;;
+  *) die "Illegal argument: $1. Please specify one of all|halos|services" ;;
 esac
 
 

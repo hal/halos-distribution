@@ -13,7 +13,7 @@ halOS consists of two parts:
 
 This repository contains scripts to set up halOS on an OpenShift cluster. The easiest way to get started is to use the [OpenShift sandbox](https://developers.redhat.com/developer-sandbox). The sandbox provides you with a private OpenShift environment in a shared, multi-tenant OpenShift cluster that is pre-configured with a set of developer tools.
 
-Finally, you need to install the OpenShift [command line tools](https://docs.openshift.com/container-platform/latest/cli_reference/openshift_cli/getting-started-cli.html) `oc`.
+Finally, you need to install the OpenShift [command line tools](https://docs.openshift.com/container-platform/latest/cli_reference/openshift_cli/getting-started-cli.html#installing-openshift-cli) `oc`.
 
 ## Setup
 
@@ -38,13 +38,16 @@ ARGUMENTS:
 
 You can set up everything in one go using `./setup.sh all`, or do it incrementally. The latter is useful if you first want to start halOS and then start the services. If you choose to set it up incrementally, make sure to run `./setup.sh openshift` *first*. 
 
-halOS is deployed from [quay.io/halconsole/halos](https://quay.io/repository/halconsole/halos). The script exposes a public route. Please use 
+halOS is deployed from [quay.io/halconsole/halos](https://quay.io/repository/halconsole/halos). The demo services are based on [quay.io/hpehl/wildfly-halos-demo](https://quay.io/repository/hpehl/wildfly-halos-demo), [quay.io/hpehl/quarkus-halos-demo](https://quay.io/repository/hpehl/quarkus-halos-demo) and [quay.io/halconsole/wildfly](https://quay.io/repository/halconsole/wildfly).
+
+### Quickstart
+
+To set up everything and open the console in the browser, simply run 
 
 ```shell
-oc get route halos --output jsonpath={.spec.host} 
+./setup.sh all
+./console.sh
 ```
-
-to get the hostname. The demo services are based on [quay.io/hpehl/wildfly-halos-demo](https://quay.io/repository/hpehl/wildfly-halos-demo), [quay.io/hpehl/quarkus-halos-demo](https://quay.io/repository/hpehl/quarkus-halos-demo) and [quay.io/halconsole/wildfly](https://quay.io/repository/halconsole/wildfly).
 
 ## Cleanup
 
