@@ -38,7 +38,7 @@ ARGUMENTS:
 
 You can set up everything in one go using `./setup.sh all`, or do it incrementally. The latter is useful if you first want to start halOS and then start the services. If you choose to set it up incrementally, make sure to run `./setup.sh openshift` *first*. 
 
-The script deploys halOS from [quay.io/halconsole/halos](https://quay.io/repository/halconsole/halos) and exposes a secure route. Please use 
+halOS is deployed from [quay.io/halconsole/halos](https://quay.io/repository/halconsole/halos). The script exposes a public route. Please use 
 
 ```shell
 oc get route halos --output jsonpath={.spec.host} 
