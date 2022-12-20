@@ -39,7 +39,6 @@ FLAGS:
 
 ARGUMENTS:
     all                 Cleanup everything
-    openshift           Cleanup service account, roles and role binding
     halos               Undeploy halOS service and routes
     services            Undeploy WildFly and Quarkus demo services
 EOF
