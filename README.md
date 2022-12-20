@@ -71,4 +71,4 @@ ARGUMENTS:
 
 ## Development
 
-To run halOS in development, follow the related sections for the [proxy](https://github.com/hal/halos-proxy#development) and the [console](https://github.com/hal/halos-console#development).  
+To run halOS in dev mode, follow the related sections for the [proxy](https://github.com/hal/halos-proxy#development) and the [console](https://github.com/hal/halos-console#development).  
