@@ -36,7 +36,7 @@ ARGUMENTS:
     services            Deploy WildFly and Quarkus demo services
 ```
 
-You can set up everything in one go `./setup.sh all`, or do it incrementally. The latter is useful if you first want to start halOS and then start the services. 
+You can set up everything in one go using `./setup.sh all`, or do it incrementally. The latter is useful if you first want to start halOS and then start the services. If you choose to set it up incrementally, make sure to run `./setup.sh openshift` *first*. 
 
 The script deploys halOS from [quay.io/halconsole/halos](https://quay.io/repository/halconsole/halos) and exposes a secure route. Please use 
 
